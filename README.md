@@ -2,11 +2,31 @@
 
 Free, local SEO + GEO (AI-search-citation) analysis as an MCP tool. No signup, no API key, nothing sent to RankCLI's servers — it runs entirely inside your MCP host (Claude Code, Claude Desktop, Cursor, etc.) against HTML you already have or that your host fetches for you.
 
+## Install
+
+[![Add to Cursor](https://img.shields.io/badge/Add%20to-Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)](cursor://anysphere.cursor-deeplink/mcp/install?name=rankcli&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkByYW5rY2xpL21jcC1zZXJ2ZXIiXX0=)
+[![Add to VS Code](https://img.shields.io/badge/Add%20to-VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22rankcli%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40rankcli%2Fmcp-server%22%5D%7D)
+
+**Claude Code** — one line, no config file:
+
 ```bash
-npx @rankcli/mcp-server
+claude mcp add rankcli -- npx -y @rankcli/mcp-server
 ```
 
-**Claude Desktop config** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+**Anything else** (Claude Desktop, Codex, Windsurf) — the standard config block:
+
+```json
+{
+  "mcpServers": {
+    "rankcli": {
+      "command": "npx",
+      "args": ["-y", "@rankcli/mcp-server"]
+    }
+  }
+}
+```
+
+**Claude Desktop config path** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
