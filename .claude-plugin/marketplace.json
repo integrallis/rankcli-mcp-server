@@ -1,0 +1,16 @@
+{
+  "name": "rankcli",
+  "description": "RankCLI: SEO and AI-search audits for coding agents",
+  "owner": {
+    "name": "Integrallis Software",
+    "url": "https://rankcli.dev"
+  },
+  "plugins": [
+    {
+      "name": "rankcli",
+      "source": "./",
+      "description": "SEO and AI-search audits: 280+ checks, a CI gate, fixes in the codebase, plus the rankcli MCP server",
+      "version": "0.1.0"
+    }
+  ]
+}
