@@ -1,0 +1,13 @@
+{
+  "name": "rankcli",
+  "description": "SEO and AI-search audits for your coding agent: 280+ checks, a CI gate, and fixes applied in the codebase, via the free RankCLI CLI and MCP server.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Integrallis Software",
+    "url": "https://rankcli.dev"
+  },
+  "homepage": "https://rankcli.dev",
+  "repository": "https://github.com/integrallis/rankcli-mcp-server",
+  "license": "MIT",
+  "keywords": ["seo", "geo", "ai-visibility", "ai-search", "mcp", "ci"]
+}

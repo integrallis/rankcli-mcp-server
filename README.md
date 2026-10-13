@@ -43,6 +43,29 @@ claude mcp add rankcli -- npx -y @rankcli/mcp-server
 }
 ```
 
+## Agent skills and Claude Code plugin
+
+The same checks as skills your coding agent loads on demand. Two skills ship in this repo:
+`seo-audit` (run the audit, read the JSON, fix the highest-impact issues in the codebase) and
+`seo-ci-gate` (fail the build on SEO regressions in GitHub Actions or any CI).
+
+**Any agent** (Claude Code, Cursor, Codex, Copilot, Windsurf and others), via the
+[skills CLI](https://skills.sh):
+
+```bash
+npx skills add integrallis/rankcli-mcp-server
+```
+
+**Claude Code plugin** (the two skills plus the MCP server, one install):
+
+```
+/plugin install rankcli --marketplace integrallis/rankcli-mcp-server
+```
+
+or from a shell: `claude plugin marketplace add integrallis/rankcli-mcp-server` then
+`claude plugin install rankcli@rankcli`. The skills are then `/rankcli:seo-audit` and
+`/rankcli:seo-ci-gate`.
+
 ## Available Tools
 
 | Tool | Description |
