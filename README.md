@@ -8,7 +8,7 @@ Free, local SEO + GEO (AI-search-citation) analysis as an MCP tool. No signup, n
 [![Add to VS Code](https://img.shields.io/badge/Add%20to-VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22rankcli%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40rankcli%2Fmcp-server%22%5D%7D)
 
 **Claude Desktop** — download the latest `.mcpb` from
-[Releases](https://github.com/integrallis/rankcli-cli/releases/latest) and double-click it.
+[Releases](https://github.com/integrallis/rankcli/releases/latest) and double-click it.
 No config file, no terminal.
 
 **Claude Code** — one line, no config file:
@@ -45,9 +45,15 @@ claude mcp add rankcli -- npx -y @rankcli/mcp-server
 
 ## Agent skills and Claude Code plugin
 
-The same checks as skills your coding agent loads on demand. Two skills ship in this repo:
-`seo-audit` (run the audit, read the JSON, fix the highest-impact issues in the codebase) and
-`seo-ci-gate` (fail the build on SEO regressions in GitHub Actions or any CI).
+The same checks as skills your coding agent loads on demand, named for the job you type:
+
+| Skill | For |
+|---|---|
+| `check-site-before-deploy` | the audit as a deploy gate: build directory or preview URL, a committed baseline, GitHub Actions or any CI |
+| `fix-seo-regressions` | what changed, against a baseline or a previous report, fixed in the codebase by code |
+| `is-my-site-blocked-from-ai-search` | whether ChatGPT, Claude, Perplexity and Google can read the site, by bot class, and the fix in robots.txt, at the CDN or in the framework |
+| `seo-audit` | the full audit, read and triaged |
+| `seo-ci-gate` | the short form of the deploy gate |
 
 **Any agent** (Claude Code, Cursor, Codex, Copilot, Windsurf and others), via the
 [skills CLI](https://skills.sh):
@@ -63,8 +69,12 @@ npx skills add integrallis/rankcli-mcp-server
 ```
 
 or from a shell: `claude plugin marketplace add integrallis/rankcli-mcp-server` then
-`claude plugin install rankcli@rankcli`. The skills are then `/rankcli:seo-audit` and
-`/rankcli:seo-ci-gate`.
+`claude plugin install rankcli@rankcli`. The skills are then `/rankcli:check-site-before-deploy`,
+`/rankcli:fix-seo-regressions`, `/rankcli:is-my-site-blocked-from-ai-search`, `/rankcli:seo-audit`
+and `/rankcli:seo-ci-gate`.
+
+The server's source is `packages/mcp-server` in [integrallis/rankcli](https://github.com/integrallis/rankcli)
+(FSL-1.1-MIT); this repository is the install page, the skills and the plugin.
 
 ## Available Tools
 
@@ -94,7 +104,9 @@ Your MCP host fetches the page and Claude calls these tools directly — nothing
 
 ## Want more?
 
-This local server works from HTML/robots.txt you or your MCP host supply. For **URL-only tools that fetch and crawl for you** (`seo_audit`, `seo_geo_check`, `seo_robots_check`, `seo_compare`), plus the newer Cloudflare AI-crawler-gating compliance check, CI/CD scheduling, and auto-fix PRs, see the hosted endpoint and paid tiers:
+This local server works from HTML/robots.txt you or your MCP host supply. The free hosted
+endpoint `https://mcp.rankcli.dev/mcp/free` serves the same thirteen analysis tools with no
+key, for hosts that cannot run npx. For **URL-only tools that fetch and crawl for you** (`seo_audit`, `seo_geo_check`, `seo_robots_check`, `seo_compare`), plus the newer Cloudflare AI-crawler-gating compliance check, CI/CD scheduling, and auto-fix PRs, see the hosted endpoint and paid tiers:
 
 ```json
 {

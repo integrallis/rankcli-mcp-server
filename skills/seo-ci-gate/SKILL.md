@@ -37,18 +37,21 @@ jobs:
       contents: read
       pull-requests: write   # only for the PR comment
     steps:
+      - uses: actions/checkout@v7          # for rankcli.config.json and the baseline
       - uses: integrallis/rankcli-action@v1
         id: audit
         with:
           url: https://example.com        # or the preview deployment URL
-          fail-on-error: 'true'
-          score-threshold: '80'           # 0 disables; set it 5 below the current score
-          comment-on-pr: 'true'
+          fail-on: error,score<80         # set the score floor 5 below the current score
+          baseline: .rankcli/baseline.json  # optional: only new findings fail the build
       - run: echo "score=${{ steps.audit.outputs.score }} passed=${{ steps.audit.outputs.passed }}"
 ```
 
-Optional inputs: `api-key` (links the run to the dashboard; falls back to `RANKCLI_API_KEY`),
-`slack-webhook` / `discord-webhook` with `alert-on: error,failure`.
+Optional inputs: `dir` (audit the build output instead of a URL; `url` then names the site it
+is built for), `headers` (for protected previews), `max-pages`, `report-file`, `api-key`
+(links the run to the dashboard; falls back to `RANKCLI_API_KEY`), `slack-webhook` /
+`discord-webhook` with `alert-on: error,failure`. The Action annotates the run and keeps one
+PR comment up to date, posted on regressions only.
 
 To audit a preview deployment, pass the URL the deploy step outputs (Vercel, Netlify and
 Cloudflare Pages all expose one) instead of the production URL.
@@ -56,7 +59,7 @@ Cloudflare Pages all expose one) instead of the production URL.
 ## 3. Any other CI (GitLab, CircleCI, Jenkins, a Makefile)
 
 ```bash
-npx -y @rankcli/cli audit --url "$DEPLOY_URL" --fail-on error --min-score 80
+npx -y @rankcli/cli audit --url "$DEPLOY_URL" --fail-on error,score<80 --baseline .rankcli/baseline.json
 ```
 
 Exit codes: `0` passed, `1` the gate tripped, `2` bad invocation, `3` the URL was unreachable or
@@ -65,12 +68,15 @@ artifact; stdout is one JSON document even on failure.
 
 ## 4. Choosing thresholds
 
-- Start with `--fail-on error` (or `fail-on-error: 'true'`) only. Errors are things like noindex
-  on an indexable page, a canonical pointing elsewhere, missing title, blocked crawlers, 5xx.
-- Add a score floor once the baseline is known: current score minus 5. Raise it as you fix things.
-- `--fail-on warning` is strict; use it on a docs or marketing site that is already clean.
+- Start with `--fail-on error` only. Errors are things like noindex on an indexable page, a
+  canonical pointing elsewhere, missing title, a search crawler refused at the edge, 5xx.
+- Add `score<N` once the baseline is known: current score minus 5. Raise it as you fix things.
+  `score:aiReadiness<70` gates one category.
+- `--fail-on warning` is strict; use it with a committed baseline (`rankcli audit -o json >
+  .rankcli/baseline.json`), so only new findings fail the build.
 
 ## 5. When the gate fails
 
-Read the report with the `seo-audit` skill: errors first, then indexability, then everything
-else. Fix the cause in the codebase; do not loosen the gate to make the build green.
+Read the report with the `fix-seo-regressions` skill: new findings first, then errors, then
+indexability, then everything else. Fix the cause in the codebase; do not loosen the gate to
+make the build green. The fuller version of this skill is `check-site-before-deploy`.

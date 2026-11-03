@@ -41,9 +41,11 @@ jq '[.issues[] | select(.severity=="error")] | group_by(.code) | map({code: .[0]
    4xx/5xx. These make everything else irrelevant.
 3. **On-page**: missing or duplicate titles and descriptions, heading structure, broken links.
 4. **Structured data** and Open Graph.
-5. **AI readiness**: AI crawlers (GPTBot, ClaudeBot, PerplexityBot) blocked by robots.txt or at the
-   CDN edge, no `llms.txt`, content that an AI answer could not quote (no direct answers, no
-   self-contained sections).
+5. **AI search**: the AI search crawlers (OAI-SearchBot, Claude-SearchBot, PerplexityBot)
+   disallowed in robots.txt or refused at the CDN edge (the `is-my-site-blocked-from-ai-search`
+   skill has the fix by bot class), metadata that only Googlebot gets, content an answer engine
+   cannot quote (no direct answer after a question heading, statistics without a source).
+   Disallowing the training crawlers (GPTBot, ClaudeBot) costs no visibility; leave it.
 
 What not to act on: `notice` items are informational. A `noindex` on `/login`, `/signup`,
 `/account` or an app shell is intended and the audit already skips the search-visibility checks
@@ -70,6 +72,12 @@ npx -y @rankcli/cli fix --url https://example.com --only MISSING_META_DESCRIPTIO
 
 Run the same audit command again and compare `score` and the set of issue `code`s. Report the
 before and after score and the codes that disappeared. If the score fell, say so; do not hide it.
+
+## Related skills
+
+`fix-seo-regressions` compares against a baseline or a previous report and fixes what changed;
+`check-site-before-deploy` puts the audit in CI; `is-my-site-blocked-from-ai-search` answers
+the crawler question by bot class.
 
 ## Focused checks
 
